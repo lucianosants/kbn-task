@@ -10,9 +10,7 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main style={default_font.style}>
-                <h1 className="text-primary-500">Home Page</h1>
-            </main>
+            <main style={default_font.style}>KBN Task</main>
         </>
     );
 }
