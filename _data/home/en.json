@@ -1,0 +1,10 @@
+{
+    "header": {
+        "brand": "Kbn-Task",
+        "button_login": "Log in",
+        "new_task": "Add a new task"
+    },
+    "main": {
+        "titles": ["todo", "doing", "done"]
+    }
+}
