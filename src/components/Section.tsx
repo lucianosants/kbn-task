@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, DragEvent } from 'react';
 
 import { GoPrimitiveDot } from 'react-icons/go';
 
@@ -7,6 +7,8 @@ interface SectionProps {
     children: ReactNode;
     title: string;
     amount: number;
+    onDrop: (event: DragEvent) => void;
+    onDragOver: (event: DragEvent) => void;
 }
 
 export default function Section({
@@ -14,6 +16,8 @@ export default function Section({
     children,
     title,
     amount,
+    onDrop,
+    onDragOver,
 }: SectionProps) {
     const defaultStyles = {
         container: 'p-4 rounded-xl w-72 h-fit',
@@ -62,7 +66,13 @@ export default function Section({
 
                 <p className={styles[status].count}>({amount})</p>
             </div>
-            <div className="flex flex-col gap-4 mt-3">{children}</div>
+            <div
+                className="flex flex-col gap-4 mt-3"
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+            >
+                {children}
+            </div>
         </section>
     );
 }
