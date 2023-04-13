@@ -4,23 +4,41 @@ import Todo from '@/src/components/Todo';
 
 import data from '@/_data/home/en.json';
 import fakeData from '@/_data/fakeData.json';
-import { DragEvent } from 'react';
+
+import { DragEvent, useState } from 'react';
 
 export default function HomeScreen() {
     const { titles } = data.main;
 
-    const getAmount = (taskList: string) =>
-        fakeData.filter((tasks) => tasks.status === taskList).length;
+    const [tasks, setTasks] = useState(fakeData);
 
-    const handleOnDrag = (event: DragEvent, status: string) => {
-        console.log(`I'm moving from ${status}`);
+    const getAmount = (taskList: string) =>
+        tasks.filter((tasks) => tasks.status === taskList).length;
+
+    const handleOnDrag = (event: DragEvent, id: string) => {
+        event.dataTransfer.setData('text/plain', id);
+        event.dataTransfer.dropEffect = 'move';
     };
 
     const handleOnDrop = (event: DragEvent, status: string) => {
-        console.log(`You dropped me here - ${status}`);
+        event.preventDefault();
+
+        const id = event.dataTransfer.getData('text/plain');
+
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === id) {
+                return {
+                    ...task,
+                    status: status,
+                };
+            }
+            return task;
+        });
+
+        setTasks(updatedTasks);
     };
 
-    const handleDragOver = (event: DragEvent, status: string) => {
+    const handleDragOver = (event: DragEvent) => {
         event.preventDefault();
     };
 
@@ -31,20 +49,19 @@ export default function HomeScreen() {
                 status="todo"
                 amount={getAmount(titles[0])}
                 onDrop={(e) => handleOnDrop(e, 'todo')}
-                onDragOver={(e) => handleDragOver(e, 'todo')}
+                onDragOver={(e) => handleDragOver(e)}
             >
-                {fakeData &&
-                    fakeData
-                        .filter((task) => task.status === titles[0])
-                        .map((task) => (
-                            <Todo
-                                key={task.id}
-                                status="todo"
-                                onDragStart={(e) => handleOnDrag(e, 'todo')}
-                            >
-                                {task.content}
-                            </Todo>
-                        ))}
+                {tasks
+                    .filter((task) => task.status === titles[0])
+                    .map((task) => (
+                        <Todo
+                            key={task.id}
+                            status="todo"
+                            onDragStart={(e) => handleOnDrag(e, task.id)}
+                        >
+                            {task.content}
+                        </Todo>
+                    ))}
             </Section>
 
             <Section
@@ -52,16 +69,16 @@ export default function HomeScreen() {
                 status="doing"
                 amount={getAmount(titles[1])}
                 onDrop={(e) => handleOnDrop(e, 'doing')}
-                onDragOver={(e) => handleDragOver(e, 'doing')}
+                onDragOver={(e) => handleDragOver(e)}
             >
-                {fakeData &&
-                    fakeData
+                {tasks &&
+                    tasks
                         .filter((task) => task.status === titles[1])
                         .map((task) => (
                             <Todo
                                 key={task.id}
                                 status="doing"
-                                onDragStart={(e) => handleOnDrag(e, 'doing')}
+                                onDragStart={(e) => handleOnDrag(e, task.id)}
                             >
                                 {task.content}
                             </Todo>
@@ -73,16 +90,16 @@ export default function HomeScreen() {
                 status="done"
                 amount={getAmount(titles[2])}
                 onDrop={(e) => handleOnDrop(e, 'done')}
-                onDragOver={(e) => handleDragOver(e, 'done')}
+                onDragOver={(e) => handleDragOver(e)}
             >
-                {fakeData &&
-                    fakeData
+                {tasks &&
+                    tasks
                         .filter((task) => task.status === titles[2])
                         .map((task) => (
                             <Todo
                                 key={task.id}
                                 status="done"
-                                onDragStart={(e) => handleOnDrag(e, 'done')}
+                                onDragStart={(e) => handleOnDrag(e, task.id)}
                             >
                                 {task.content}
                             </Todo>

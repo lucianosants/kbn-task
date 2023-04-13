@@ -1,4 +1,4 @@
-import { ReactNode, DragEvent } from 'react';
+import { ReactNode, DragEvent, HtmlHTMLAttributes } from 'react';
 
 import { GoPrimitiveDot } from 'react-icons/go';
 
@@ -72,6 +72,9 @@ export default function Section({
                 onDragOver={onDragOver}
             >
                 {children}
+                <p>
+                    Drop a new task here <strong className="text-3xl">+</strong>
+                </p>
             </div>
         </section>
     );
