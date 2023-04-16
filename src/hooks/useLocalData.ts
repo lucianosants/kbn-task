@@ -29,17 +29,17 @@ export function useLocalData() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
     }, [tasks]);
 
-    function generateId() {
+    const generateId = () => {
         const randomString = Math.random().toString(36).substring(2, 9);
 
         return randomString;
-    }
+    };
 
-    const addTask = (content: string, status: string) => {
+    const addTask = (content: string) => {
         const newTask: NewTaskProps = {
             id: generateId(),
             content: content,
-            status: status,
+            status: 'todo',
         };
 
         setTasks([...tasks, newTask]);
