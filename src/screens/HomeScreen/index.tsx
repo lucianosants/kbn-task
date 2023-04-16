@@ -103,67 +103,31 @@ export default function HomeScreen() {
                 </Dialog.Portal>
             </Dialog.Root>
 
-            <Section
-                title={titles[0]}
-                status="todo"
-                amount={getAmount(titles[0])}
-                onDrop={(e) => handleOnDrop(e, 'todo')}
-                onDragOver={(e) => handleDragOver(e)}
-            >
-                {tasks
-                    .filter((task) => task.status === titles[0])
-                    .map((task) => (
-                        <Todo
-                            key={task.id}
-                            status="todo"
-                            onDragStart={(e) => handleOnDrag(e, task.id)}
-                        >
-                            {task.content}
-                        </Todo>
-                    ))}
-            </Section>
-
-            <Section
-                title={titles[1]}
-                status="doing"
-                amount={getAmount(titles[1])}
-                onDrop={(e) => handleOnDrop(e, 'doing')}
-                onDragOver={(e) => handleDragOver(e)}
-            >
-                {tasks &&
-                    tasks
-                        .filter((task) => task.status === titles[1])
-                        .map((task) => (
-                            <Todo
-                                key={task.id}
-                                status="doing"
-                                onDragStart={(e) => handleOnDrag(e, task.id)}
-                            >
-                                {task.content}
-                            </Todo>
-                        ))}
-            </Section>
-
-            <Section
-                title={titles[2]}
-                status="done"
-                amount={getAmount(titles[2])}
-                onDrop={(e) => handleOnDrop(e, 'done')}
-                onDragOver={(e) => handleDragOver(e)}
-            >
-                {tasks &&
-                    tasks
-                        .filter((task) => task.status === titles[2])
-                        .map((task) => (
-                            <Todo
-                                key={task.id}
-                                status="done"
-                                onDragStart={(e) => handleOnDrag(e, task.id)}
-                            >
-                                {task.content}
-                            </Todo>
-                        ))}
-            </Section>
+            {titles.map((title, index) => (
+                <Section
+                    key={`${index} - ${title}`}
+                    title={title}
+                    status={title as 'todo' | 'doing' | 'done'}
+                    amount={getAmount(title)}
+                    onDrop={(e) => handleOnDrop(e, title)}
+                    onDragOver={(e) => handleDragOver(e)}
+                >
+                    {tasks &&
+                        tasks
+                            .filter((task) => task.status === title)
+                            .map((task) => (
+                                <Todo
+                                    key={task.id}
+                                    status={title as 'todo' | 'doing' | 'done'}
+                                    onDragStart={(e) =>
+                                        handleOnDrag(e, task.id)
+                                    }
+                                >
+                                    {task.content}
+                                </Todo>
+                            ))}
+                </Section>
+            ))}
         </Container>
     );
 }
