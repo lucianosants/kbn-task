@@ -12,13 +12,13 @@ export default function Todo(props: TodoProps) {
     const { content, status } = {
         status: {
             todo: {
-                container: `${defaultStyles} bg-danger-300 text-danger-999`,
+                container: `${defaultStyles} bg-danger-400/50 text-danger-100`,
             },
             doing: {
-                container: `${defaultStyles} bg-primary-300 text-primary-999 rounded-xl`,
+                container: `${defaultStyles} bg-primary-300/50 text-primary-999 rounded-xl`,
             },
             done: {
-                container: `${defaultStyles} bg-secondary-600 text-secondary-999 rounded-xl`,
+                container: `${defaultStyles} bg-secondary-600/50 text-secondary-50 rounded-xl`,
             },
         },
         content: 'line-clamp-3',

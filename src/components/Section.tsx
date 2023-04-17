@@ -29,28 +29,28 @@ export default function Section({
 
     const styles = {
         todo: {
-            container: `${defaultStyles.container} bg-danger-500`,
+            container: `${defaultStyles.container} bg-danger-500/20`,
             header: defaultStyles.header,
-            status: `${defaultStyles.status} bg-danger-200`,
-            icon: `text-danger-600`,
-            title: `${defaultStyles.title} text-danger-600`,
-            count: `${defaultStyles.count} text-danger-50`,
+            status: `${defaultStyles.status} bg-danger-200/30`,
+            icon: `text-danger-500`,
+            title: `${defaultStyles.title} text-danger-100`,
+            count: `${defaultStyles.count} text-danger-100`,
         },
         doing: {
-            container: `${defaultStyles.container} bg-primary-600`,
+            container: `${defaultStyles.container} bg-primary-600/40`,
             header: defaultStyles.header,
-            status: `${defaultStyles.status} bg-primary-200`,
-            icon: `text-primary-700`,
-            title: `${defaultStyles.title} text-primary-600`,
+            status: `${defaultStyles.status} bg-primary-300/40`,
+            icon: `text-primary-100`,
+            title: `${defaultStyles.title} text-primary-200`,
             count: `${defaultStyles.count} text-primary-200`,
         },
         done: {
-            container: `${defaultStyles.container} bg-secondary-300`,
+            container: `${defaultStyles.container} bg-secondary-500/30`,
             header: defaultStyles.header,
-            status: `${defaultStyles.status} bg-secondary-600`,
-            icon: `text-secondary-900`,
-            title: `${defaultStyles.title} text-secondary-900`,
-            count: `${defaultStyles.count} text-secondary-900`,
+            status: `${defaultStyles.status} bg-secondary-400/50`,
+            icon: `text-secondary-200`,
+            title: `${defaultStyles.title} text-secondary-50`,
+            count: `${defaultStyles.count} text-secondary-50`,
         },
     };
 
@@ -72,8 +72,8 @@ export default function Section({
                 onDragOver={onDragOver}
             >
                 {children}
-                <p>
-                    Drop a new task here <strong className="text-3xl">+</strong>
+                <p className="flex items-center justify-center gap-2 text-center text-neutral-variant-100">
+                    Drop here <strong className="text-3xl">+</strong>
                 </p>
             </div>
         </section>
