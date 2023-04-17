@@ -91,11 +91,22 @@ export function useLocalData() {
         }
     };
 
+    const deleteTask = (id: string) => {
+        const updatedTasks = tasks.filter((task) => task.id !== id);
+
+        setTasks(updatedTasks);
+
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
+        }
+    };
+
     return {
         tasks,
         setTasks,
         addTask,
         moveTask,
         editTask,
+        deleteTask,
     };
 }

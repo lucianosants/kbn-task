@@ -26,6 +26,7 @@ interface TodoProps {
     editTask: ({ ...props }) => void;
     onOutput: (event: string) => void;
     readOnly: boolean;
+    deleteTask: () => void;
 }
 
 export default function Todo({ children, readOnly, ...props }: TodoProps) {
@@ -91,6 +92,7 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
                                 className="p-2 bg-danger-600 rounded-xl text-neutral-variant-50 hover:bg-danger-700 disabled:opacity-50"
                                 aria-label="Close form"
                                 disabled={!isReadOnly}
+                                onClick={props.deleteTask}
                             >
                                 <span>Delete</span>
                             </button>

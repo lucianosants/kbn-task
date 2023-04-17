@@ -20,7 +20,7 @@ export default function HomeScreen() {
     const [mounted, setMounted] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(true);
 
-    const { tasks, addTask, moveTask, editTask } = useLocalData();
+    const { tasks, addTask, moveTask, editTask, deleteTask } = useLocalData();
 
     const getAmount = (taskList: string) => {
         if (mounted) {
@@ -136,14 +136,15 @@ export default function HomeScreen() {
                                     key={task.id}
                                     id={task.id}
                                     status={title as 'todo' | 'doing' | 'done'}
+                                    readOnly={isReadOnly}
+                                    onOutput={handleSetInput}
+                                    deleteTask={() => deleteTask(task.id)}
                                     onDragStart={(e) =>
                                         handleOnDrag(e, task.id)
                                     }
-                                    readOnly={isReadOnly}
                                     editTask={() =>
                                         editContentTask(task.id, task.status)
                                     }
-                                    onOutput={handleSetInput}
                                 >
                                     {task.content}
                                 </Todo>
