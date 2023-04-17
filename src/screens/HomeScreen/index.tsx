@@ -1,4 +1,4 @@
-import { DragEvent, FormEvent, useState } from 'react';
+import { DragEvent, FormEvent, useEffect, useState } from 'react';
 import { BsNodePlusFill } from 'react-icons/bs';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -14,12 +14,21 @@ import Form from '@/src/components/Form';
 
 export default function HomeScreen() {
     const { titles } = data.main;
-    const [content, setContent] = useState('');
 
-    const { tasks, setTasks, addTask } = useLocalData();
+    const [newContent, setContent] = useState('');
+    const [updatedContent, setUpdatedContent] = useState('');
+    const [mounted, setMounted] = useState(false);
+    const [isReadOnly, setIsReadOnly] = useState(true);
 
-    const getAmount = (taskList: string) =>
-        tasks.filter((tasks) => tasks.status === taskList).length;
+    const { tasks, addTask, moveTask, editTask } = useLocalData();
+
+    const getAmount = (taskList: string) => {
+        if (mounted) {
+            return tasks.filter((tasks) => tasks.status === taskList).length;
+        } else {
+            return 0;
+        }
+    };
 
     const handleOnDrag = (event: DragEvent, id: string) => {
         event.dataTransfer.setData('text/plain', id);
@@ -31,31 +40,38 @@ export default function HomeScreen() {
 
         const id = event.dataTransfer.getData('text/plain');
 
-        const updatedTasks = tasks.map((task) => {
-            if (task.id === id) {
-                return {
-                    ...task,
-                    status: status,
-                };
-            }
-            return task;
-        });
-
-        setTasks(updatedTasks);
+        moveTask(id, status);
     };
 
     const handleDragOver = (event: DragEvent) => {
         event.preventDefault();
     };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-        addTask(content);
+        addTask(newContent);
 
         setContent('');
         alert('A new tasks created!');
     };
+
+    const editContentTask = (id: string, status: string) => {
+        if (isReadOnly) {
+            setIsReadOnly(false);
+        } else {
+            editTask(id, updatedContent, status);
+            setUpdatedContent('');
+
+            setIsReadOnly(true);
+        }
+    };
+
+    const handleSetInput = (value: string) => setUpdatedContent(value);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     return (
         <Container>
@@ -94,7 +110,7 @@ export default function HomeScreen() {
                                     className="w-full p-2 bg-transparent border rounded-lg resize-none text-primary-100 border-primary-500 focus:bg-neutral-variant-500 focus:text-primary-50 h-44"
                                     placeholder="Create a task..."
                                     maxLength={280}
-                                    value={content}
+                                    value={newContent}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                             </label>
@@ -112,16 +128,22 @@ export default function HomeScreen() {
                     onDrop={(e) => handleOnDrop(e, title)}
                     onDragOver={(e) => handleDragOver(e)}
                 >
-                    {tasks &&
+                    {mounted &&
                         tasks
                             .filter((task) => task.status === title)
                             .map((task) => (
                                 <Todo
                                     key={task.id}
+                                    id={task.id}
                                     status={title as 'todo' | 'doing' | 'done'}
                                     onDragStart={(e) =>
                                         handleOnDrag(e, task.id)
                                     }
+                                    readOnly={isReadOnly}
+                                    editTask={() =>
+                                        editContentTask(task.id, task.status)
+                                    }
+                                    onOutput={handleSetInput}
                                 >
                                     {task.content}
                                 </Todo>
