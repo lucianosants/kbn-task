@@ -15,25 +15,27 @@ type NewTaskProps = {
 export function useLocalData() {
     const STORAGE_KEY = 'tasks';
 
-    const [tasks, setTasks] = useState<TasksProps>([]);
+    const [tasks, setTasks] = useState<TasksProps>(() => {
+        if (typeof window !== 'undefined') {
+            const storedTask = localStorage.getItem(STORAGE_KEY);
+            return storedTask ? JSON.parse(storedTask) : [];
+        } else {
+            return [];
+        }
+    });
 
     useEffect(() => {
-        const storedTasks = JSON.parse(
-            localStorage.getItem(STORAGE_KEY) || '[]',
-        );
-
-        setTasks(storedTasks);
+        const storedTasks = localStorage.getItem(STORAGE_KEY);
+        if (storedTasks) setTasks(JSON.parse(storedTasks));
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        }
     }, [tasks]);
 
-    const generateId = () => {
-        const randomString = Math.random().toString(36).substring(2, 9);
-
-        return randomString;
-    };
+    const generateId = () => Math.random().toString(36).substring(2, 9);
 
     const addTask = (content: string) => {
         const newTask: NewTaskProps = {
@@ -42,12 +44,58 @@ export function useLocalData() {
             status: 'todo',
         };
 
-        setTasks([...tasks, newTask]);
+        const updatedTasks = [...tasks, newTask];
+
+        setTasks(updatedTasks);
+
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
+        }
+    };
+
+    const moveTask = (id: string, status: string) => {
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === id) {
+                return {
+                    ...task,
+                    status: status,
+                };
+            }
+            return task;
+        });
+
+        setTasks(updatedTasks);
+
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
+        }
+    };
+
+    const editTask = (id: string, content: string, status: string) => {
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === id) {
+                return {
+                    ...task,
+                    id: id,
+                    content: content,
+                    status: status,
+                };
+            }
+            return task;
+        });
+
+        setTasks(updatedTasks);
+
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
+        }
     };
 
     return {
         tasks,
         setTasks,
         addTask,
+        moveTask,
+        editTask,
     };
 }
