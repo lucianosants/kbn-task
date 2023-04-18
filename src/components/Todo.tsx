@@ -32,6 +32,7 @@ interface TodoProps {
 export default function Todo({ children, readOnly, ...props }: TodoProps) {
     const [taskContent, setTaskContent] = useState(children);
     const [isReadOnly, setIsReadOnly] = useState(readOnly);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         const value = event.target.value;
@@ -46,8 +47,8 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
 
     return (
         <>
-            <Dialog.Root>
-                <Dialog.Trigger asChild>
+            <Dialog.Root open={isOpen}>
+                <Dialog.Trigger asChild onClick={() => setIsOpen(true)}>
                     <article
                         className={status[props.status].container}
                         draggable
@@ -58,7 +59,12 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
                 </Dialog.Trigger>
 
                 <Dialog.Portal>
-                    <Dialog.Overlay className="fixed inset-0 w-screen h-full backdrop-blur-md bg-neutral-variant-700/40 " />
+                    <Dialog.Overlay
+                        className="fixed inset-0 w-screen h-full pointer-events-auto backdrop-blur-md bg-neutral-variant-700/40"
+                        onClick={() =>
+                            !isReadOnly ? setIsOpen(true) : setIsOpen(false)
+                        }
+                    />
 
                     <Dialog.Content className="fixed w-11/12 max-w-2xl p-6 -translate-x-1/2 -translate-y-1/2 border border-neutral-900 sm:p-10 top-80 left-1/2 bg-neutral-variant-600/80 backdrop-blur-xl rounded-xl">
                         <textarea
@@ -70,8 +76,10 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
 
                         <div className="flex justify-end gap-3 mt-6">
                             <Dialog.Close
-                                className="p-2 border rounded-xl hover:bg-neutral-800 text-primary-500 border-primary-500"
+                                className="p-2 border rounded-xl disabled:opacity-50 hover:bg-neutral-800 text-primary-500 border-primary-500"
                                 aria-label="Close form"
+                                disabled={!isReadOnly ? true : false}
+                                onClick={() => setIsOpen(false)}
                             >
                                 <span>Close</span>
                             </Dialog.Close>

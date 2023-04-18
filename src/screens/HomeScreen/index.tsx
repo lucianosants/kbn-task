@@ -61,7 +61,6 @@ export default function HomeScreen() {
             setIsReadOnly(false);
         } else {
             editTask(id, updatedContent, status);
-            setUpdatedContent('');
 
             setIsReadOnly(true);
         }
