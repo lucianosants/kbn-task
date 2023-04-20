@@ -1,4 +1,8 @@
-const addTask = async (content: string, uid: string) => {
+const addTask = async (
+    content: string,
+    refreshData: () => void,
+    uid?: string,
+) => {
     try {
         const response = await fetch('/api/tasks/add-task', {
             method: 'POST',
@@ -8,6 +12,10 @@ const addTask = async (content: string, uid: string) => {
 
         if (!response.ok) {
             throw new Error('Unable to add task');
+        }
+
+        if (response.status < 300) {
+            refreshData();
         }
 
         alert('A new tasks created!');
