@@ -2,16 +2,27 @@ import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { authOptions } from './api/auth/[...nextauth]';
 import { default_font } from '@/src/lib/next-font';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+
+import { addTask } from '@/src/utils/add-task';
+import { deleteTask } from '@/src/utils/delete-task';
+import { moveTask } from '@/src/utils/move-task';
+import { editTask } from '@/src/utils/edit-task';
+import { getTasksByUid } from '@/src/utils/get-tasks-by-uid';
 
 import HomeScreen from '@/src/screens/HomeScreen';
 
-import { useLocalData } from '@/src/hooks/useLocalData';
+interface Props {
+    tasks: Array<{
+        id: string;
+        uid: string;
+        content: string;
+        status: string;
+    }>;
+}
 
-export default function Home() {
-    const { tasks, addTask, moveTask, editTask, deleteTask } = useLocalData();
-
+export default function Tasks({ tasks }: Props) {
     return (
         <>
             <Head>
@@ -26,14 +37,13 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-
             <main className={`h-full ${default_font.className}`}>
                 <HomeScreen
-                    tasks={tasks}
                     addTask={addTask}
+                    tasks={tasks}
+                    deleteTask={deleteTask}
                     moveTask={moveTask}
                     editTask={editTask}
-                    deleteTask={deleteTask}
                 />
             </main>
         </>
@@ -43,18 +53,21 @@ export default function Home() {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const session = await getServerSession(req, res, authOptions);
 
-    if (session) {
+    if (!session) {
         return {
             redirect: {
-                destination: '/home/tasks',
+                destination: '/',
                 permanent: false,
             },
         };
     }
 
+    const tasks = await getTasksByUid(session.user.id);
+
     return {
         props: {
             session,
+            tasks,
         },
     };
 };

@@ -71,18 +71,29 @@ export function useLocalData() {
         }
     };
 
-    const editTask = (id: string, content: string, status: string) => {
+    const editTask = (id: string, content: string, refreshData: () => void) => {
         const updatedTasks = tasks.map((task) => {
             if (task.id === id) {
                 return {
                     ...task,
                     id: id,
                     content: content,
-                    status: status,
                 };
             }
+
+            refreshData();
             return task;
         });
+
+        setTasks(updatedTasks);
+
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
+        }
+    };
+
+    const deleteTask = (id: string) => {
+        const updatedTasks = tasks.filter((task) => task.id !== id);
 
         setTasks(updatedTasks);
 
@@ -97,5 +108,6 @@ export function useLocalData() {
         addTask,
         moveTask,
         editTask,
+        deleteTask,
     };
 }
