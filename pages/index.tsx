@@ -1,8 +1,17 @@
 import Head from 'next/head';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+
+import { authOptions } from './api/auth/[...nextauth]';
 import { default_font } from '@/src/lib/next-font';
+
 import HomeScreen from '@/src/screens/HomeScreen';
 
+import { useLocalData } from '@/src/hooks/useLocalData';
+
 export default function Home() {
+    const { tasks, addTask, moveTask, editTask, deleteTask } = useLocalData();
+
     return (
         <>
             <Head>
@@ -17,9 +26,35 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <main className={`h-full ${default_font.className}`}>
-                <HomeScreen />
+                <HomeScreen
+                    tasks={tasks}
+                    addTask={addTask}
+                    moveTask={moveTask}
+                    editTask={editTask}
+                    deleteTask={deleteTask}
+                />
             </main>
         </>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (session) {
+        return {
+            redirect: {
+                destination: '/home/tasks',
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: {
+            session,
+        },
+    };
+};
