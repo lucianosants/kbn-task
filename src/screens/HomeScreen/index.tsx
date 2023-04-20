@@ -1,18 +1,43 @@
 import { DragEvent, FormEvent, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { DefaultSession } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import { BsNodePlusFill } from 'react-icons/bs';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import * as Dialog from '@radix-ui/react-dialog';
 
-import { useLocalData } from '@/src/hooks/useLocalData';
-
 import Container from '@/src/components/Container';
 import Section from '@/src/components/Section';
 import Todo from '@/src/components/Todo';
-
-import data from '@/_data/home/en.json';
 import Form from '@/src/components/Form';
 
-export default function HomeScreen() {
+import data from '@/_data/home/en.json';
+
+interface SessionProps extends DefaultSession {
+    user?: DefaultSession['user'] & {
+        id: string | null;
+    };
+}
+
+interface HomeScreenProps {
+    tasks: Array<{
+        id: string;
+        content: string;
+        status: string;
+    }>;
+    addTask: (content: string, refreshData: () => void, uid?: string) => void;
+    moveTask: (id: string, status: string, refreshData: () => void) => void;
+    editTask: (id: string, content: string, refreshData: () => void) => void;
+    deleteTask: (id: string, refreshData: () => void) => void;
+}
+
+export default function HomeScreen({
+    tasks,
+    addTask,
+    moveTask,
+    editTask,
+    deleteTask,
+}: HomeScreenProps) {
     const { titles } = data.main;
 
     const [newContent, setContent] = useState('');
@@ -20,11 +45,19 @@ export default function HomeScreen() {
     const [mounted, setMounted] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(true);
 
-    const { tasks, addTask, moveTask, editTask, deleteTask } = useLocalData();
+    const { data: sessionData } = useSession();
+
+    const session = sessionData as SessionProps;
+
+    const router = useRouter();
+
+    const refreshData = () => {
+        router.replace(router.asPath);
+    };
 
     const getAmount = (taskList: string) => {
         if (mounted) {
-            return tasks.filter((tasks) => tasks.status === taskList).length;
+            return tasks?.filter((tasks) => tasks.status === taskList).length;
         } else {
             return 0;
         }
@@ -40,7 +73,7 @@ export default function HomeScreen() {
 
         const id = event.dataTransfer.getData('text/plain');
 
-        moveTask(id, status);
+        moveTask(id, status, refreshData);
     };
 
     const handleDragOver = (event: DragEvent) => {
@@ -50,17 +83,20 @@ export default function HomeScreen() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        addTask(newContent);
+        addTask(newContent, refreshData, session?.user?.id as string);
 
         setContent('');
-        alert('A new tasks created!');
     };
 
-    const editContentTask = (id: string, status: string) => {
+    const handleDelete = async (id: string) => {
+        deleteTask(id, refreshData);
+    };
+
+    const editContentTask = (id: string) => {
         if (isReadOnly) {
             setIsReadOnly(false);
         } else {
-            editTask(id, updatedContent, status);
+            editTask(id, updatedContent, refreshData);
 
             setIsReadOnly(true);
         }
@@ -123,13 +159,13 @@ export default function HomeScreen() {
                     key={`${index} - ${title}`}
                     title={title}
                     status={title as 'todo' | 'doing' | 'done'}
-                    amount={getAmount(title)}
+                    amount={(getAmount(title) as number) || 0}
                     onDrop={(e) => handleOnDrop(e, title)}
                     onDragOver={(e) => handleDragOver(e)}
                 >
                     {mounted &&
                         tasks
-                            .filter((task) => task.status === title)
+                            ?.filter((task) => task.status === title)
                             .map((task) => (
                                 <Todo
                                     key={task.id}
@@ -137,13 +173,11 @@ export default function HomeScreen() {
                                     status={title as 'todo' | 'doing' | 'done'}
                                     readOnly={isReadOnly}
                                     onOutput={handleSetInput}
-                                    deleteTask={() => deleteTask(task.id)}
+                                    deleteTask={() => handleDelete(task.id)}
                                     onDragStart={(e) =>
                                         handleOnDrag(e, task.id)
                                     }
-                                    editTask={() =>
-                                        editContentTask(task.id, task.status)
-                                    }
+                                    editTask={() => editContentTask(task.id)}
                                 >
                                     {task.content}
                                 </Todo>
