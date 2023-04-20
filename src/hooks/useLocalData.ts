@@ -71,16 +71,17 @@ export function useLocalData() {
         }
     };
 
-    const editTask = (id: string, content: string, status: string) => {
+    const editTask = (id: string, content: string, refreshData: () => void) => {
         const updatedTasks = tasks.map((task) => {
             if (task.id === id) {
                 return {
                     ...task,
                     id: id,
                     content: content,
-                    status: status,
                 };
             }
+
+            refreshData();
             return task;
         });
 
