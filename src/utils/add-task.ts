@@ -18,8 +18,6 @@ const addTask = async (
             refreshData();
         }
 
-        alert('A new tasks created!');
-
         return response;
     } catch (error) {
         console.error(error);

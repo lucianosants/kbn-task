@@ -14,8 +14,6 @@ const deleteTask = async (id: string | undefined, refreshData: () => void) => {
             refreshData();
         }
 
-        alert('A new tasks deleted!');
-
         return response;
     } catch (error) {
         console.error(error);

@@ -1,4 +1,4 @@
-import { DragEvent, FormEvent, useEffect, useState } from 'react';
+import { DragEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DefaultSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
@@ -13,6 +13,7 @@ import Form from '@/src/components/Form';
 import Loading from '@/src/components/Loading';
 
 import data from '@/_data/home/en.json';
+import { MessageContext } from '@/src/context/MessageContext';
 
 interface SessionProps extends DefaultSession {
     user?: DefaultSession['user'] & {
@@ -46,6 +47,8 @@ export default function HomeScreen({
     const [mounted, setMounted] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
+
+    const { showMessage } = useContext(MessageContext);
 
     const { data: sessionData } = useSession();
     const session = sessionData as SessionProps;
@@ -88,13 +91,18 @@ export default function HomeScreen({
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        addTask(newContent, refreshData, session?.user?.id as string);
+        const id = session?.user?.id as string;
+
+        addTask(newContent, refreshData, id);
 
         setContent('');
+        showMessage('created');
     };
 
     const handleDelete = async (id: string) => {
         deleteTask(id, refreshData);
+
+        showMessage('deleted');
     };
 
     const editContentTask = (id: string) => {
@@ -104,6 +112,7 @@ export default function HomeScreen({
             editTask(id, updatedContent, refreshData);
 
             setIsReadOnly(true);
+            showMessage('edited');
         }
     };
 
