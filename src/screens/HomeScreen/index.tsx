@@ -10,6 +10,7 @@ import Container from '@/src/components/Container';
 import Section from '@/src/components/Section';
 import Todo from '@/src/components/Todo';
 import Form from '@/src/components/Form';
+import Loading from '@/src/components/Loading';
 
 import data from '@/_data/home/en.json';
 
@@ -44,9 +45,9 @@ export default function HomeScreen({
     const [updatedContent, setUpdatedContent] = useState('');
     const [mounted, setMounted] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const { data: sessionData } = useSession();
-
     const session = sessionData as SessionProps;
 
     const router = useRouter();
@@ -74,6 +75,10 @@ export default function HomeScreen({
         const id = event.dataTransfer.getData('text/plain');
 
         moveTask(id, status, refreshData);
+
+        const time = setTimeout(() => setIsLoading(false), 2000);
+        setIsLoading(true);
+        return () => clearTimeout(time);
     };
 
     const handleDragOver = (event: DragEvent) => {
@@ -106,6 +111,14 @@ export default function HomeScreen({
 
     useEffect(() => {
         setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        const time = setTimeout(() => setIsLoading(false), 2000);
+
+        setIsLoading(true);
+
+        return () => clearTimeout(time);
     }, []);
 
     return (
@@ -166,22 +179,51 @@ export default function HomeScreen({
                     {mounted &&
                         tasks
                             ?.filter((task) => task.status === title)
-                            .map((task) => (
-                                <Todo
-                                    key={task.id}
-                                    id={task.id}
-                                    status={title as 'todo' | 'doing' | 'done'}
-                                    readOnly={isReadOnly}
-                                    onOutput={handleSetInput}
-                                    deleteTask={() => handleDelete(task.id)}
-                                    onDragStart={(e) =>
-                                        handleOnDrag(e, task.id)
-                                    }
-                                    editTask={() => editContentTask(task.id)}
-                                >
-                                    {task.content}
-                                </Todo>
-                            ))}
+                            .map((task) => {
+                                return (
+                                    <div key={task.id}>
+                                        {isLoading ? (
+                                            tasks.filter(
+                                                (task) => task.status,
+                                            ) && <Loading />
+                                        ) : (
+                                            <Todo
+                                                key={task.id}
+                                                id={task.id}
+                                                status={
+                                                    title as
+                                                        | 'todo'
+                                                        | 'doing'
+                                                        | 'done'
+                                                }
+                                                readOnly={isReadOnly}
+                                                onOutput={handleSetInput}
+                                                deleteTask={() =>
+                                                    handleDelete(task.id)
+                                                }
+                                                onDragStart={(e) =>
+                                                    handleOnDrag(e, task.id)
+                                                }
+                                                editTask={() =>
+                                                    editContentTask(task.id)
+                                                }
+                                            >
+                                                {task.content}
+                                            </Todo>
+                                        )}
+                                    </div>
+                                );
+                            })}
+
+                    {mounted &&
+                        tasks.filter((task) => task.status === title).length ===
+                            0 && (
+                            <div
+                                aria-label="Is empty"
+                                role="log"
+                                className="px-3 border border-neutral-variant-100/30 cursor-no-drop py-9 bg-neutral-variant-100/20 rounded-xl"
+                            />
+                        )}
                 </Section>
             ))}
         </Container>

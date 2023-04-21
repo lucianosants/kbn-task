@@ -1,7 +1,7 @@
 import { ReactNode, DragEvent, useState, useEffect, ChangeEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
-const defaultStyles = 'p-3 rounded-xl cursor-pointer';
+const defaultStyles = 'p-3 rounded-xl cursor-grab active:cursor-grabbing';
 
 const { content, status } = {
     status: {
