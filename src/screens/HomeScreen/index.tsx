@@ -64,9 +64,10 @@ export default function HomeScreen({
 
         moveTask(id, status, refreshData);
 
-        const time = setTimeout(() => setIsLoading(false), 2000);
-        setIsLoading(true);
-        return () => clearTimeout(time);
+        if (session) {
+            setTimeout(() => setIsLoading(false), 1300);
+            setIsLoading(true);
+        }
     };
 
     const handleDragOver = (event: DragEvent) => {
@@ -108,7 +109,7 @@ export default function HomeScreen({
     }, []);
 
     useEffect(() => {
-        const time = setTimeout(() => setIsLoading(false), 2000);
+        const time = setTimeout(() => setIsLoading(false), 1000);
 
         setIsLoading(true);
 
