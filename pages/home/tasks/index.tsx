@@ -5,21 +5,18 @@ import { getServerSession } from 'next-auth';
 import { default_font } from '@/src/lib/next-font';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
+import HomeScreen from '@/src/screens/HomeScreen';
+
 import { addTask } from '@/src/utils/add-task';
 import { deleteTask } from '@/src/utils/delete-task';
 import { moveTask } from '@/src/utils/move-task';
 import { editTask } from '@/src/utils/edit-task';
 import { getTasksByUid } from '@/src/utils/get-tasks-by-uid';
 
-import HomeScreen from '@/src/screens/HomeScreen';
+import { HomeTasksProps } from '@/src/@types/tasks';
 
 interface Props {
-    tasks: Array<{
-        id: string;
-        uid: string;
-        content: string;
-        status: string;
-    }>;
+    tasks: HomeTasksProps;
 }
 
 export default function Tasks({ tasks }: Props) {

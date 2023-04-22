@@ -1,5 +1,7 @@
-import { ReactNode, DragEvent, useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+
+import { TodoProps } from '../@types/todo';
 
 const defaultStyles = 'p-3 rounded-xl cursor-grab active:cursor-grabbing';
 
@@ -17,17 +19,6 @@ const { content, status } = {
     },
     content: 'line-clamp-3',
 };
-
-interface TodoProps {
-    id: string;
-    status: 'todo' | 'doing' | 'done';
-    children: ReactNode;
-    onDragStart: (event: DragEvent) => void;
-    editTask: ({ ...props }) => void;
-    onOutput: (event: string) => void;
-    readOnly: boolean;
-    deleteTask: () => void;
-}
 
 export default function Todo({ children, readOnly, ...props }: TodoProps) {
     const [taskContent, setTaskContent] = useState(children);

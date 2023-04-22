@@ -1,10 +1,6 @@
-import { ReactNode } from 'react';
+import { OnlyChildren } from '@/src/@types/only-children';
 
-interface ContainerProps {
-    children: ReactNode;
-}
-
-export default function Container({ children }: ContainerProps) {
+export default function Container({ children }: OnlyChildren) {
     return (
         <div className="flex h-full gap-6 p-6 mx-auto overflow-auto max-w-7xl">
             {children}

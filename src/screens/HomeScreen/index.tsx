@@ -1,6 +1,5 @@
 import { DragEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { DefaultSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { BsNodePlusFill } from 'react-icons/bs';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -13,25 +12,11 @@ import Form from '@/src/components/Form';
 import Loading from '@/src/components/Loading';
 
 import data from '@/_data/home/en.json';
+
 import { MessageContext } from '@/src/context/MessageContext';
 
-interface SessionProps extends DefaultSession {
-    user?: DefaultSession['user'] & {
-        id: string | null;
-    };
-}
-
-interface HomeScreenProps {
-    tasks: Array<{
-        id: string;
-        content: string;
-        status: string;
-    }>;
-    addTask: (content: string, refreshData: () => void, uid?: string) => void;
-    moveTask: (id: string, status: string, refreshData: () => void) => void;
-    editTask: (id: string, content: string, refreshData: () => void) => void;
-    deleteTask: (id: string, refreshData: () => void) => void;
-}
+import { HomeScreenProps } from '@/src/@types/home-screen';
+import { SessionProps } from '@/src/@types/sessionProps';
 
 export default function HomeScreen({
     tasks,
@@ -61,7 +46,7 @@ export default function HomeScreen({
 
     const getAmount = (taskList: string) => {
         if (mounted) {
-            return tasks?.filter((tasks) => tasks.status === taskList).length;
+            return tasks?.filter((task) => task.status === taskList).length;
         } else {
             return 0;
         }

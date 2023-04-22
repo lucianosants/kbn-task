@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
 
-type TasksProps = Array<{
-    id: string;
-    content: string;
-    status: string;
-}>;
-
-type NewTaskProps = {
-    id: string;
-    content: string;
-    status: string;
-};
+import { TaskProps, TasksProps } from '../@types/tasks';
 
 export function useLocalData() {
     const STORAGE_KEY = 'tasks';
@@ -38,7 +28,7 @@ export function useLocalData() {
     const generateId = () => Math.random().toString(36).substring(2, 9);
 
     const addTask = (content: string) => {
-        const newTask: NewTaskProps = {
+        const newTask: TaskProps = {
             id: generateId(),
             content: content,
             status: 'todo',

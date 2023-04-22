@@ -1,15 +1,5 @@
-import { ReactNode, DragEvent, HtmlHTMLAttributes } from 'react';
-
 import { GoPrimitiveDot } from 'react-icons/go';
-
-interface SectionProps {
-    status: 'todo' | 'doing' | 'done';
-    children: ReactNode;
-    title: string;
-    amount: number;
-    onDrop: (event: DragEvent) => void;
-    onDragOver: (event: DragEvent) => void;
-}
+import { SectionProps } from '../@types/section';
 
 export default function Section({
     status,

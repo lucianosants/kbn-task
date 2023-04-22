@@ -1,32 +1,19 @@
-import { ReactNode, createContext, useReducer } from 'react';
+import { createContext, useReducer } from 'react';
 
-type MessageContextProps = {
-    message: string;
-    showMessage: (type: ShowMessageProps) => void;
-};
-
-type MessageContextProviderProps = {
-    children: ReactNode;
-};
-
-export type ShowMessageProps = 'created' | 'edited' | 'deleted';
-
-type MessageState = string;
-
-type MessageAction =
-    | { type: 'created' }
-    | { type: 'edited' }
-    | { type: 'deleted' }
-    | { type: 'clear' };
+import {
+    MessageAction,
+    MessageContextProps,
+    MessageState,
+    ShowMessageProps,
+} from '../@types/message-context';
+import { OnlyChildren } from '../@types/only-children';
 
 export const MessageContext = createContext<MessageContextProps>({
     message: 'inicial',
     showMessage: () => {},
 });
 
-export const MessageContextProvider = ({
-    children,
-}: MessageContextProviderProps) => {
+export const MessageContextProvider = ({ children }: OnlyChildren) => {
     const setMessage = (state: MessageState, action: MessageAction) => {
         switch (action.type) {
             case 'created':

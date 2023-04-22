@@ -3,18 +3,16 @@ import '@/src/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { ReactNode, useContext } from 'react';
 import { SessionProvider } from 'next-auth/react';
-import Nav from '@/src/patterns/Nav';
 
 import {
     MessageContext,
     MessageContextProvider,
 } from '@/src/context/MessageContext';
 
+import Nav from '@/src/patterns/Nav';
 import Message from '@/src/components/Message';
 
-type MessageWrapperProps = {
-    children: ReactNode;
-};
+import { OnlyChildren } from '@/src/@types/only-children';
 
 export default function App({
     Component,
@@ -32,7 +30,7 @@ export default function App({
     );
 }
 
-const MessageWrapper = ({ children }: MessageWrapperProps) => {
+const MessageWrapper = ({ children }: OnlyChildren) => {
     const { message } = useContext(MessageContext);
 
     return (
