@@ -1,4 +1,5 @@
 import { client } from '../lib/prisma';
+import { formatDate } from './format-date';
 
 const getTasksByUid = async (uid: string | undefined) => {
     try {
@@ -6,9 +7,15 @@ const getTasksByUid = async (uid: string | undefined) => {
             where: {
                 uid: uid,
             },
+
+            orderBy: {
+                createdAt: 'asc',
+            },
         });
 
-        return response;
+        return formatDate(response);
+
+        // return formattedTasks;
     } catch (error) {
         console.log(error);
     }

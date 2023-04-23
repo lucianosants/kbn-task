@@ -13,6 +13,8 @@ model Task {
     content String @db.Text()
     status  String @db.Text()
     uid     String
+
+    createdAt DateTime @default(now()) @db.Timestamp(6)
 }
 
 model Account {
