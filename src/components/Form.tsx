@@ -1,3 +1,5 @@
+import data from '@/_data/home/en.json';
+
 import { FormProps } from '../@types/form';
 
 export default function Form({ handleSubmit, children }: FormProps) {
@@ -13,7 +15,7 @@ export default function Form({ handleSubmit, children }: FormProps) {
                 type="submit"
                 className="px-3 py-2 font-semibold rounded-md hover:bg-primary-700 text-neutral-50 bg-primary-600"
             >
-                Add Task
+                {data.form.new_task_btn}
             </button>
         </form>
     );

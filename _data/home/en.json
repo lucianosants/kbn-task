@@ -6,5 +6,21 @@
     },
     "main": {
         "titles": ["todo", "doing", "done"]
+    },
+    "form": {
+        "close_btn_aria_label": "Close new task form",
+        "trigger_btn": "Add New Task",
+        "new_task_btn": "Add Task",
+        "label_text": "Content",
+        "placeholder": "Create a task..."
+    },
+    "loading_aria_label": "Waiting for loading",
+    "section_drop_item": "Drop something here",
+    "todo": {
+        "close_btn": "close",
+        "close_btn_aria_label": "Close todo form",
+        "close_btn_title": "Close",
+        "change_btn": ["Edit", "save"],
+        "delete_btn_title": "Delete"
     }
 }

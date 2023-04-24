@@ -1,6 +1,8 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
+import data from '@/_data/home/en.json';
+
 import { TodoProps } from '../@types/todo';
 
 const defaultStyles = 'p-3 rounded-xl cursor-grab active:cursor-grabbing';
@@ -24,6 +26,8 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
     const [taskContent, setTaskContent] = useState(children);
     const [isReadOnly, setIsReadOnly] = useState(readOnly);
     const [isOpen, setIsOpen] = useState(false);
+
+    const { todo } = data;
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         const value = event.target.value;
@@ -68,11 +72,11 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
                         <div className="flex justify-end gap-3 mt-6">
                             <Dialog.Close
                                 className="p-2 border rounded-xl disabled:opacity-50 hover:bg-neutral-800 text-primary-500 border-primary-500"
-                                aria-label="Close form"
+                                aria-label={todo.close_btn_aria_label}
                                 disabled={!isReadOnly ? true : false}
                                 onClick={() => setIsOpen(false)}
                             >
-                                <span>Close</span>
+                                <span>{todo.close_btn_title}</span>
                             </Dialog.Close>
 
                             <button
@@ -80,20 +84,22 @@ export default function Todo({ children, readOnly, ...props }: TodoProps) {
                                     isReadOnly
                                         ? 'bg-primary-600'
                                         : 'bg-secondary-600 text-neutral-variant-900'
-                                }  bg-primary-600 rounded-xl text-neutral-variant-50 hover:bg-primary-700"
-                                aria-label="Close form`}
+                                }  bg-primary-600 rounded-xl text-neutral-variant-50 hover:bg-primary-700"`}
                                 onClick={props.editTask}
                             >
-                                <span>{isReadOnly ? 'Edit' : 'Save'}</span>
+                                <span>
+                                    {isReadOnly
+                                        ? todo.change_btn[0]
+                                        : todo.change_btn[1]}
+                                </span>
                             </button>
 
                             <button
                                 className="p-2 bg-danger-600 rounded-xl text-neutral-variant-50 hover:bg-danger-700 disabled:opacity-50"
-                                aria-label="Close form"
                                 disabled={!isReadOnly}
                                 onClick={props.deleteTask}
                             >
-                                <span>Delete</span>
+                                <span>{todo.delete_btn_title}</span>
                             </button>
                         </div>
                     </Dialog.Content>

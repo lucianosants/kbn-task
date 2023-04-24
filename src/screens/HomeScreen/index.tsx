@@ -25,7 +25,7 @@ export default function HomeScreen({
     editTask,
     deleteTask,
 }: HomeScreenProps) {
-    const { titles } = data.main;
+    const { form, main } = data;
 
     const [newContent, setContent] = useState('');
     const [updatedContent, setUpdatedContent] = useState('');
@@ -122,8 +122,8 @@ export default function HomeScreen({
                 <Dialog.Trigger asChild>
                     <button
                         className="fixed p-3 border rounded-full hover:text-primary-400 hover:border-primary-400 bottom-4 right-4 text-primary-500 border-primary-500 h-fit"
-                        aria-label="Add New Task"
-                        title="New Task"
+                        aria-label={form.trigger_btn}
+                        title={form.trigger_btn}
                     >
                         <BsNodePlusFill size={24} />
                     </button>
@@ -135,7 +135,7 @@ export default function HomeScreen({
                     <Dialog.Content className="fixed w-11/12 max-w-2xl p-6 -translate-x-1/2 -translate-y-1/2 border border-neutral-900 sm:p-10 top-80 left-1/2 bg-neutral-variant-600/80 backdrop-blur-xl rounded-xl">
                         <Dialog.Close
                             className="text-primary-500"
-                            aria-label="Close form"
+                            aria-label={form.close_btn_aria_label}
                         >
                             <AiFillCloseCircle size={24} />
                         </Dialog.Close>
@@ -144,14 +144,14 @@ export default function HomeScreen({
                             <label className="flex">
                                 <span
                                     className="sr-only"
-                                    aria-label="Task title"
+                                    aria-label={form.label_text}
                                 >
-                                    Content
+                                    {form.label_text}
                                 </span>
 
                                 <textarea
                                     className="w-full p-2 bg-transparent border rounded-lg resize-none text-primary-100 border-primary-500 focus:bg-neutral-variant-500 focus:text-primary-50 h-44"
-                                    placeholder="Create a task..."
+                                    placeholder={form.placeholder}
                                     maxLength={280}
                                     value={newContent}
                                     onChange={(e) => setContent(e.target.value)}
@@ -162,7 +162,7 @@ export default function HomeScreen({
                 </Dialog.Portal>
             </Dialog.Root>
 
-            {titles.map((title, index) => (
+            {main.titles.map((title, index) => (
                 <Section
                     key={`${index} - ${title}`}
                     title={title}

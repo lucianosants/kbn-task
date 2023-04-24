@@ -1,5 +1,9 @@
+import { BsNodePlusFill } from 'react-icons/bs';
+
 import { GoPrimitiveDot } from 'react-icons/go';
 import { SectionProps } from '../@types/section';
+
+import data from '@/_data/home/en.json';
 
 export default function Section({
     status,
@@ -62,8 +66,8 @@ export default function Section({
                 onDragOver={onDragOver}
             >
                 {children}
-                <p className="flex items-center justify-center gap-2 text-center text-neutral-variant-100">
-                    Drop here <strong className="text-3xl">+</strong>
+                <p className="flex items-center justify-center gap-2 py-3 text-center text-neutral-variant-100 bg-neutral-variant-200/20 rounded-xl">
+                    {data.section_drop_item} <BsNodePlusFill size={20} />
                 </p>
             </div>
         </section>
