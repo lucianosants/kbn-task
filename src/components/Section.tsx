@@ -14,7 +14,7 @@ export default function Section({
     onDragOver,
 }: SectionProps) {
     const defaultStyles = {
-        container: 'p-4 rounded-xl w-72 h-fit',
+        container: 'p-4 rounded-xl w-80 h-fit',
         header: 'flex items-center gap-3',
         status: 'flex items-center justify-start gap-1 px-4 rounded-full w-fit',
         title: 'block pt-1 text-sm font-bold uppercase',
@@ -49,7 +49,7 @@ export default function Section({
     };
 
     return (
-        <section className={`${styles[status].container} h-fit`}>
+        <section className={`${styles[status].container} min-w-fit h-fit`}>
             <div className={styles[status].header}>
                 <div className={styles[status].status}>
                     <p className={styles[status].icon}>
@@ -66,7 +66,7 @@ export default function Section({
                 onDragOver={onDragOver}
             >
                 {children}
-                <p className="flex items-center justify-center gap-2 py-3 text-center text-neutral-variant-100 bg-neutral-variant-200/20 rounded-xl">
+                <p className="flex items-center justify-center gap-2 p-3 text-center text-neutral-variant-100 bg-neutral-variant-200/20 rounded-xl">
                     {data.section_drop_item} <BsNodePlusFill size={20} />
                 </p>
             </div>

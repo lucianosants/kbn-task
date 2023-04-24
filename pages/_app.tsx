@@ -1,7 +1,7 @@
 import '@/src/styles/globals.css';
 
 import type { AppProps } from 'next/app';
-import { ReactNode, useContext } from 'react';
+import { useContext } from 'react';
 import { SessionProvider } from 'next-auth/react';
 
 import {
