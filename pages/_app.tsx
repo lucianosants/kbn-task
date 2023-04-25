@@ -11,6 +11,7 @@ import {
 
 import Header from '@/src/patterns/Header';
 import Message from '@/src/components/Message';
+import Footer from '@/src/patterns/Footer';
 
 import { OnlyChildren } from '@/src/@types/only-children';
 
@@ -24,6 +25,7 @@ export default function App({
                 <MessageWrapper>
                     <Header />
                     <Component {...pageProps} />
+                    <Footer />
                 </MessageWrapper>
             </MessageContextProvider>
         </SessionProvider>
