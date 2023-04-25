@@ -35,7 +35,10 @@ const MessageWrapper = ({ children }: OnlyChildren) => {
 
     return (
         <>
-            {message && <Message>{message}</Message>}
+            {message &&
+                message.map((message, index) => (
+                    <Message key={index}>{message}</Message>
+                ))}
 
             {children}
         </>

@@ -8,28 +8,31 @@ import {
 } from '../@types/message-context';
 import { OnlyChildren } from '../@types/only-children';
 
-export const MessageContext = createContext<MessageContextProps>({
-    message: 'inicial',
+const initialContextProps: MessageContextProps = {
+    message: [''],
     showMessage: () => {},
-});
+};
+
+export const MessageContext =
+    createContext<MessageContextProps>(initialContextProps);
 
 export const MessageContextProvider = ({ children }: OnlyChildren) => {
     const setMessage = (state: MessageState, action: MessageAction) => {
         switch (action.type) {
             case 'created':
-                return 'A task was created:';
+                return [...state, 'A task was created'];
             case 'edited':
-                return 'A task was edited:' + state;
+                return [...state, 'A task was edited'];
             case 'deleted':
-                return 'A task was deleted:' + state;
+                return [...state, 'A task was deleted'];
             case 'clear':
-                return '';
+                return [];
             default:
-                return 'An error occurred while executing action';
+                return [...state, 'An error occurred while executing action'];
         }
     };
 
-    const [state, dispatch] = useReducer(setMessage, '');
+    const [state, dispatch] = useReducer(setMessage, []);
 
     const showMessage = (type: ShowMessageProps) => {
         switch (type) {
