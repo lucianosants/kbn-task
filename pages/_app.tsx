@@ -9,7 +9,7 @@ import {
     MessageContextProvider,
 } from '@/src/context/MessageContext';
 
-import Nav from '@/src/patterns/Nav';
+import Header from '@/src/patterns/Header';
 import Message from '@/src/components/Message';
 
 import { OnlyChildren } from '@/src/@types/only-children';
@@ -22,7 +22,7 @@ export default function App({
         <SessionProvider session={session}>
             <MessageContextProvider>
                 <MessageWrapper>
-                    <Nav />
+                    <Header />
                     <Component {...pageProps} />
                 </MessageWrapper>
             </MessageContextProvider>
